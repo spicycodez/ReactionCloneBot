@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  reaction-bot:
+    build: .
+    container_name: reaction_bot_master
+    restart: unless-stopped
+    env_file:
+      - .env
+    depends_on:
+      - mongo
+    volumes:
+      - ./sessions:/app/sessions
+      - ./bot.log:/app/bot.log
+
+  mongo:
+    image: mongo:7
+    container_name: reaction_bot_mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:
