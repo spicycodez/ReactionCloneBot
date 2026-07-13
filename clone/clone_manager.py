@@ -64,6 +64,7 @@ class CloneManager:
             in_memory=True,
         )
         client.bot_id = me.id  # attach for handlers to reference
+        client.bot_token = bot_token  # used by auto_react.py for the Bot API reactions call
         client.is_clone = True
 
         await client.start()
