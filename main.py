@@ -7,6 +7,7 @@ from config import Config
 from database.mongo import Mongo
 from clone.clone_manager import clone_manager
 from utils.logger import get_logger
+from utils.startup_log import send_startup_log
 
 logger = get_logger("main")
 
@@ -36,6 +37,7 @@ async def main():
     me = await master.get_me()
     master.bot_id = me.id
     logger.info("Master bot started: @%s", me.username)
+    await send_startup_log(master, me, label="Master Bot")
 
     # 3. Resume any clones that were running before restart
     await clone_manager.restart_all_clones()
