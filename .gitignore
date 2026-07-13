@@ -1,0 +1,25 @@
+# Environment
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+
+# Pyrogram session files
+*.session
+*.session-journal
+
+# Logs
+*.log
+bot.log
+
+# OS
+.DS_Store
+
+# Editor
+.vscode/
+.idea/

@@ -1,0 +1,71 @@
+{
+    "name": "Telegram Reaction Bot",
+    "description": "A Telegram bot that auto-reacts to channel/group posts with emojis, with support for owner-managed clone bots and MongoDB storage.",
+    "logo": "https://telegram.org/img/t_logo.png",
+    "keywords": [
+        "python3",
+        "telegram",
+        "bot",
+        "reaction-bot",
+        "telegram-bot",
+        "pyrogram"
+    ],
+    "env": {
+        "API_ID": {
+            "description": "Get this value from https://my.telegram.org",
+            "value": "",
+            "required": true
+        },
+        "API_HASH": {
+            "description": "Get this value from https://my.telegram.org",
+            "value": "",
+            "required": true
+        },
+        "BOT_TOKEN": {
+            "description": "Master bot's token from @BotFather",
+            "value": "",
+            "required": true
+        },
+        "MONGO_URI": {
+            "description": "MongoDB connection URI from https://cloud.mongodb.com",
+            "value": "",
+            "required": true
+        },
+        "DB_NAME": {
+            "description": "MongoDB database name",
+            "value": "reaction_bot",
+            "required": false
+        },
+        "OWNER_IDS": {
+            "description": "Comma separated Telegram user IDs allowed to control the master bot and clones",
+            "value": "",
+            "required": true
+        },
+        "DEFAULT_EMOJIS": {
+            "description": "Comma separated default reaction emojis used when a chat has no custom settings",
+            "value": "👍,❤️,🔥",
+            "required": false
+        },
+        "DEFAULT_DELAY": {
+            "description": "Default delay (in seconds) between reactions",
+            "value": "1",
+            "required": false
+        },
+        "LOG_CHANNEL": {
+            "description": "Channel ID (bot must be admin) where the bot logs activity. Leave empty to disable.",
+            "value": "",
+            "required": false
+        }
+    },
+    "buildpacks": [
+        {
+            "url": "heroku/python"
+        }
+    ],
+    "formation": {
+        "worker": {
+            "quantity": 1,
+            "size": "eco"
+        }
+    }
+}
