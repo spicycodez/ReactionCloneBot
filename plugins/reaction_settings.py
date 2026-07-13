@@ -17,9 +17,26 @@ async def is_chat_admin(client: Client, chat_id: int, user_id: int) -> bool:
         return False
 
 
+async def is_authorized(client: Client, message: Message) -> bool:
+    """
+    In channels every post is sent "as the channel" - Telegram sets
+    message.from_user to None and message.sender_chat to the channel
+    itself, so message.from_user.id crashes with AttributeError. The same
+    thing happens in groups when an anonymous admin sends a command.
+    There's no per-user id available in that case, so we treat "posted as
+    the chat itself" as proof of admin rights (only admins can post/send
+    messages as the channel/anonymously in the first place).
+    """
+    if message.from_user:
+        return await is_chat_admin(client, message.chat.id, message.from_user.id)
+    if message.sender_chat and message.sender_chat.id == message.chat.id:
+        return True
+    return False
+
+
 @Client.on_message(filters.command("setreaction") & (filters.group | filters.channel))
 async def set_reaction_cmd(client: Client, message: Message):
-    if not await is_chat_admin(client, message.chat.id, message.from_user.id):
+    if not await is_authorized(client, message):
         return await message.reply_text("❌ Sirf chat admins ye command use kar sakte hain.")
 
     if len(message.command) < 2:
@@ -50,7 +67,7 @@ async def set_reaction_cmd(client: Client, message: Message):
 
 @Client.on_message(filters.command("setdelay") & (filters.group | filters.channel))
 async def set_delay_cmd(client: Client, message: Message):
-    if not await is_chat_admin(client, message.chat.id, message.from_user.id):
+    if not await is_authorized(client, message):
         return await message.reply_text("❌ Sirf chat admins ye command use kar sakte hain.")
 
     if len(message.command) != 2 or not message.command[1].isdigit():
@@ -75,7 +92,7 @@ async def set_delay_cmd(client: Client, message: Message):
 
 @Client.on_message(filters.command("togglereact") & (filters.group | filters.channel))
 async def toggle_react_cmd(client: Client, message: Message):
-    if not await is_chat_admin(client, message.chat.id, message.from_user.id):
+    if not await is_authorized(client, message):
         return await message.reply_text("❌ Sirf chat admins ye command use kar sakte hain.")
 
     clone_id = get_bot_id(client)
@@ -96,7 +113,7 @@ async def toggle_react_cmd(client: Client, message: Message):
 
 @Client.on_message(filters.command("multireact") & (filters.group | filters.channel))
 async def multi_react_cmd(client: Client, message: Message):
-    if not await is_chat_admin(client, message.chat.id, message.from_user.id):
+    if not await is_authorized(client, message):
         return await message.reply_text("❌ Sirf chat admins ye command use kar sakte hain.")
 
     if len(message.command) != 2 or message.command[1].lower() not in ("on", "off"):
@@ -130,3 +147,4 @@ async def allowed_emojis_cmd(client: Client, message: Message):
     await message.reply_text(
         "**Allowed reaction emojis:**\n\n" + " ".join(Config.ALLOWED_EMOJIS)
     )
+
