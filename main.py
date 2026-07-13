@@ -31,6 +31,7 @@ async def main():
         plugins=dict(root="plugins"),
     )
     master.bot_id = None  # will resolve to client.me.id via get_bot_id()
+    master.bot_token = Config.BOT_TOKEN  # used by auto_react.py for the Bot API reactions call
     await master.start()
     me = await master.get_me()
     master.bot_id = me.id
