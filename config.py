@@ -16,7 +16,7 @@ class Config:
 
     # Shown by /clone as the contact for getting a bot like this made.
     # Set CONTACT_USERNAME in your .env/Heroku config vars (without the @).
-    CONTACT_USERNAME = os.environ.get("CONTACT_USERNAME", "YourUsernameHere")
+    CONTACT_USERNAME = os.environ.get("CONTACT_USERNAME", "SexyProfessor")
 
     DEFAULT_EMOJIS = os.environ.get("DEFAULT_EMOJIS", "👍,❤️,🔥").split(",")
     DEFAULT_DELAY = int(os.environ.get("DEFAULT_DELAY", "1"))
